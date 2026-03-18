@@ -27,7 +27,7 @@ class PlaylistRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * Retourne toutes les playlists triées sur le nombre de formations
      * @param type $ordre
