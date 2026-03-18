@@ -12,6 +12,8 @@
             <br /><br />
             <strong>description :</strong><br />
                 {{ playlist.description|nl2br }}
+            <br /><br />
+            <strong>nombre de formations :</strong> {{ playlistformations|length }}
         </div>
         <div class="col">
             <!-- boucle sur l'affichage des formations -->
@@ -22,17 +24,17 @@
                             <a href="{{ path('formations.showone', {id:formation.id}) }}">
                                 <img src="{{ formation.miniature }}">
                             </a>
-                        {% endif %}  
+                        {% endif %}
                     </div>
                     <div class="col d-flex align-items-center">
-                        <a href="{{ path('formations.showone', {id:formation.id}) }}" 
+                        <a href="{{ path('formations.showone', {id:formation.id}) }}"
                            class="link-secondary text-decoration-none">
                             {{ formation.title }}
-                        </a>          
+                        </a>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        
+
     </div>
 {% endblock %}
