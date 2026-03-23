@@ -11,9 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Controleur du back office des formations
+ * Controlleur du back office des formations
  *
- * @author emds
  */
 class AdminFormationsController extends AbstractController {
 
@@ -41,7 +40,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     #[Route('/admin/formations', name: 'admin.formations')]
-    public function index(): Response {
+    public function index(): Response{
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
         return $this->render("pages/admin/formations.html.twig", [
@@ -51,7 +50,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     #[Route('/admin/formations/tri/{champ}/{ordre}/{table}', name: 'admin.formations.sort')]
-    public function sort($champ, $ordre, $table=""): Response {
+    public function sort($champ, $ordre, $table=""): Response{
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
         $categories = $this->categorieRepository->findAll();
         return $this->render("pages/admin/formations.html.twig", [
@@ -61,7 +60,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     #[Route('/admin/formations/recherche/{champ}/{table}', name: 'admin.formations.findallcontain')]
-    public function findAllContain($champ, Request $request, $table=""): Response {
+    public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
         $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
@@ -74,18 +73,18 @@ class AdminFormationsController extends AbstractController {
     }
 
     #[Route('/admin/formations/supprimer/{id}', name: 'admin.formations.supprimer')]
-    public function supprimer($id): Response {
+    public function supprimer($id): Response{
         $formation = $this->formationRepository->find($id);
         $this->formationRepository->remove($formation);
         return $this->redirectToRoute('admin.formations');
     }
 
     #[Route('/admin/formations/ajouter', name: 'admin.formations.ajouter')]
-    public function ajouter(Request $request): Response {
+    public function ajouter(Request $request): Response{
         $playlists = $this->playlistRepository->findAll();
         $categories = $this->categorieRepository->findAll();
 
-        if($request->isMethod('POST')) {
+        if($request->getMethod() == "POST") {
             $formation = new Formation();
             $formation->setTitle($request->get('title'));
             $formation->setDescription($request->get('description'));
@@ -102,7 +101,10 @@ class AdminFormationsController extends AbstractController {
                 $formation->setPlaylist($playlist);
             }
 
-            $categorieIds = $request->get('categories', []);
+            $categorieIds = $request->get('categories');
+            if($categorieIds == null){
+                $categorieIds = [];
+            }
             foreach($categorieIds as $categorieId) {
                 $categorie = $this->categorieRepository->find($categorieId);
                 $formation->addCategory($categorie);
@@ -115,17 +117,18 @@ class AdminFormationsController extends AbstractController {
         return $this->render("pages/admin/formation_form.html.twig", [
             'playlists' => $playlists,
             'categories' => $categories,
-            'formation' => null
+            'formation' => null,
+            'categoriesIds' => []
         ]);
     }
 
     #[Route('/admin/formations/modifier/{id}', name: 'admin.formations.modifier')]
-    public function modifier($id, Request $request): Response {
+    public function modifier($id, Request $request): Response{
         $formation = $this->formationRepository->find($id);
         $playlists = $this->playlistRepository->findAll();
         $categories = $this->categorieRepository->findAll();
 
-        if($request->isMethod('POST')) {
+        if($request->getMethod() == "POST") {
             $formation->setTitle($request->get('title'));
             $formation->setDescription($request->get('description'));
             $formation->setVideoId($request->get('videoId'));
@@ -144,7 +147,10 @@ class AdminFormationsController extends AbstractController {
             foreach($formation->getCategories() as $cat) {
                 $formation->removeCategory($cat);
             }
-            $categorieIds = $request->get('categories', []);
+            $categorieIds = $request->get('categories');
+            if($categorieIds == null){
+                $categorieIds = [];
+            }
             foreach($categorieIds as $categorieId) {
                 $categorie = $this->categorieRepository->find($categorieId);
                 $formation->addCategory($categorie);
@@ -154,10 +160,15 @@ class AdminFormationsController extends AbstractController {
             return $this->redirectToRoute('admin.formations');
         }
 
+        $categoriesIds = [];
+        foreach($formation->getCategories() as $cat){
+            $categoriesIds[] = $cat->getId();
+        }
         return $this->render("pages/admin/formation_form.html.twig", [
             'playlists' => $playlists,
             'categories' => $categories,
-            'formation' => $formation
+            'formation' => $formation,
+            'categoriesIds' => $categoriesIds
         ]);
     }
 

@@ -34,13 +34,17 @@ class PlaylistRepository extends ServiceEntityRepository
      * @return Playlist[]
      */
     public function findAllOrderByFormationsCount($ordre): array{
-        return $this->createQueryBuilder('p')
-            ->select('p', 'COUNT(f.id) as HIDDEN nbFormations')
-            ->leftjoin('p.formations', 'f')
-            ->groupBy('p.id')
-            ->orderBy('nbFormations', $ordre)
-            ->getQuery()
-            ->getResult();
+        $playlists = $this->findAll();
+        $nbrFormations = [];
+        foreach($playlists as $p){
+            $nbrFormations[] = count($p->getFormations());
+        }
+        if($ordre == 'ASC'){
+            array_multisort($nbrFormations, SORT_ASC, $playlists);
+        }else{
+            array_multisort($nbrFormations, SORT_DESC, $playlists);
+        }
+        return $playlists;
     }
 
     public function findAllOrderByName($ordre): array{

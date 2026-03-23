@@ -1,0 +1,42 @@
+{% extends "baseback.html.twig" %}
+{% block body %}
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <h5>Ajouter une catégorie</h5>
+            <form method="POST" action="{{ path('admin.categories.ajouter') }}">
+                <div class="mb-2">
+                    <input type="text" class="form-control" name="name" placeholder="Nom de la catégorie" required>
+                </div>
+                <input type="hidden" name="_token" value="{{ csrf_token('categorie') }}">
+                <button type="submit" class="btn btn-success btn-sm">Ajouter</button>
+            </form>
+        </div>
+    </div>
+    <table class="table table-striped mt-3">
+        <caption>Liste des catégories</caption>
+        <thead>
+            <tr>
+                <th class="text-left" scope="col">catégorie</th>
+                <th class="text-center" scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+                <tr class="align-middle">
+                    <td>
+                        <h5 class="text-info">{{ categorie.name }}</h5>
+                    </td>
+                    <td class="text-center">
+                        {% if categorie.formations|length == 0 %}
+                            <a href="{{ path('admin.categories.supprimer', {id:categorie.id}) }}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Supprimer cette catégorie ?')">Supprimer</a>
+                        {% else %}
+                            <button class="btn btn-danger btn-sm" disabled>Supprimer</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

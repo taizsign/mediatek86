@@ -12,9 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Formation
 {
 
-    /**
-     * Début de chemin vers les images
-     */
     private const CHEMIN_IMAGE = "https://i.ytimg.com/vi/";
         
     #[ORM\Id]

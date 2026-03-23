@@ -1,0 +1,38 @@
+{% extends "baseback.html.twig" %}
+{% block body %}
+    <div class="mt-3">
+        <h4 class="text-info">
+            {% if playlist %}
+                Modifier une playlist
+            {% else %}
+                Ajouter une playlist
+            {% endif %}
+        </h4>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required
+                       value="{{ playlist ? playlist.name : '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ playlist ? playlist.description : '' }}</textarea>
+            </div>
+            {% if playlist and playlistformations|default([]) %}
+                <div class="mb-3">
+                    <label class="form-label">Formations rattachées</label>
+                    <ul class="list-group">
+                        {% for formation in playlistformations %}
+                            <li class="list-group-item">{{ formation.title }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <input type="hidden" name="_token" value="{{ csrf_token('playlist') }}">
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+                <a href="{{ path('admin.playlists') }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
