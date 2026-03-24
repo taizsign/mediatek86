@@ -11,8 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Controlleur du back office des formations
- *
+ * controlleur du back office des formations
  */
 class AdminFormationsController extends AbstractController {
 
@@ -39,6 +38,10 @@ class AdminFormationsController extends AbstractController {
         $this->playlistRepository = $playlistRepository;
     }
 
+    /**
+     * affiche toutes les formations
+     * @return Response
+     */
     #[Route('/admin/formations', name: 'admin.formations')]
     public function index(): Response{
         $formations = $this->formationRepository->findAll();
@@ -49,6 +52,13 @@ class AdminFormationsController extends AbstractController {
         ]);
     }
 
+    /**
+     * affiche les formations triées sur un champ
+     * @param type $champ
+     * @param type $ordre
+     * @param type $table
+     * @return Response
+     */
     #[Route('/admin/formations/tri/{champ}/{ordre}/{table}', name: 'admin.formations.sort')]
     public function sort($champ, $ordre, $table=""): Response{
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
@@ -59,6 +69,13 @@ class AdminFormationsController extends AbstractController {
         ]);
     }
 
+    /**
+     * affiche les formations dont un champ contient la valeur recherchée
+     * @param type $champ
+     * @param Request $request
+     * @param type $table
+     * @return Response
+     */
     #[Route('/admin/formations/recherche/{champ}/{table}', name: 'admin.formations.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
@@ -72,6 +89,11 @@ class AdminFormationsController extends AbstractController {
         ]);
     }
 
+    /**
+     * supprime une formation
+     * @param type $id
+     * @return Response
+     */
     #[Route('/admin/formations/supprimer/{id}', name: 'admin.formations.supprimer')]
     public function supprimer($id): Response{
         $formation = $this->formationRepository->find($id);
@@ -79,6 +101,11 @@ class AdminFormationsController extends AbstractController {
         return $this->redirectToRoute('admin.formations');
     }
 
+    /**
+     * affiche le formulaire d'ajout et enregistre la formation
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/formations/ajouter', name: 'admin.formations.ajouter')]
     public function ajouter(Request $request): Response{
         $playlists = $this->playlistRepository->findAll();
@@ -122,6 +149,12 @@ class AdminFormationsController extends AbstractController {
         ]);
     }
 
+    /**
+     * affiche le formulaire de modification et enregistre les changements
+     * @param type $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/formations/modifier/{id}', name: 'admin.formations.modifier')]
     public function modifier($id, Request $request): Response{
         $formation = $this->formationRepository->find($id);

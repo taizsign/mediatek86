@@ -9,17 +9,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Controleur du back office des catégories
- *
+ * controlleur du back office des catégories
  */
 class AdminCategoriesController extends AbstractController {
 
+    /**
+     * @var CategorieRepository
+     */
     private $categorieRepository;
 
     function __construct(CategorieRepository $categorieRepository) {
         $this->categorieRepository = $categorieRepository;
     }
 
+    /**
+     * affiche toutes les catégories
+     * @return Response
+     */
     #[Route('/admin/categories', name: 'admin.categories')]
     public function index(): Response{
         $categories = $this->categorieRepository->findAll();
@@ -28,6 +34,11 @@ class AdminCategoriesController extends AbstractController {
         ]);
     }
 
+    /**
+     * ajoute une catégorie si elle n'existe pas déjà
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/categories/ajouter', name: 'admin.categories.ajouter')]
     public function ajouter(Request $request): Response{
         $nom = $request->get('name');
@@ -41,6 +52,11 @@ class AdminCategoriesController extends AbstractController {
         return $this->redirectToRoute('admin.categories');
     }
 
+    /**
+     * supprime une catégorie si elle n'a pas de formations
+     * @param type $id
+     * @return Response
+     */
     #[Route('/admin/categories/supprimer/{id}', name: 'admin.categories.supprimer')]
     public function supprimer($id): Response{
         $categorie = $this->categorieRepository->find($id);

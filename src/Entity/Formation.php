@@ -9,6 +9,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * entité formation
+ */
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
 {
@@ -64,6 +67,10 @@ class Formation
         return $this;
     }
 
+    /**
+     * retourne la date formatée en jj/mm/aaaa ou vide si null
+     * @return string
+     */
     public function getPublishedAtString(): string {
         if($this->publishedAt == null){
             return "";
@@ -107,11 +114,19 @@ class Formation
         return $this;
     }
 
+    /**
+     * retourne l'url de la miniature youtube
+     * @return string|null
+     */
     public function getMiniature(): ?string
     {
         return self::CHEMIN_IMAGE.$this->videoId."/default.jpg";
     }
 
+    /**
+     * retourne l'url de l'image en haute qualité
+     * @return string|null
+     */
     public function getPicture(): ?string
     {
         return self::CHEMIN_IMAGE.$this->videoId."/hqdefault.jpg";

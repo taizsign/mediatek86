@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * controlleur de la page d'accueil
+ */
 class AccueilController extends AbstractController{
     
     /**
@@ -21,6 +24,10 @@ class AccueilController extends AbstractController{
         $this->repository = $repository;
     }
     
+    /**
+     * affiche les 2 dernières formations sur la page d'accueil
+     * @return Response
+     */
     #[Route('/', name: 'accueil')]
     public function index(): Response{
         $formations = $this->repository->findAllLasted(2);
@@ -29,6 +36,10 @@ class AccueilController extends AbstractController{
         ]);
     }
     
+    /**
+     * affiche la page des cgu
+     * @return Response
+     */
     #[Route('/cgu', name: 'cgu')]
     public function cgu(): Response{
         return $this->render("pages/cgu.html.twig");

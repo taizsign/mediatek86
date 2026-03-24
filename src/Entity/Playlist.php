@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * entité playlist
+ */
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 class Playlist
 {
@@ -91,6 +94,7 @@ class Playlist
     }
     
     /**
+     * retourne les catégories de la playlist sans doublons
      * @return Collection<int, string>
      */
     public function getCategoriesPlaylist() : Collection

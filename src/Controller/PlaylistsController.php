@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * controlleur des playlists
+ */
 class PlaylistsController extends AbstractController {
     
     /**
@@ -38,7 +41,7 @@ class PlaylistsController extends AbstractController {
     }
     
     /**
-     * @Route("/playlists", name="playlists")
+     * affiche toutes les playlists triées par nom
      * @return Response
      */
     #[Route('/playlists', name: 'playlists')]
@@ -51,6 +54,12 @@ class PlaylistsController extends AbstractController {
         ]);
     }
 
+    /**
+     * affiche les playlists triées sur un champ
+     * @param type $champ
+     * @param type $ordre
+     * @return Response
+     */
     #[Route('/playlists/tri/{champ}/{ordre}', name: 'playlists.sort')]
     public function sort($champ, $ordre): Response{
         switch($champ){
@@ -68,6 +77,13 @@ class PlaylistsController extends AbstractController {
         ]);
     }
 
+    /**
+     * affiche les playlists dont un champ contient la valeur recherchée
+     * @param type $champ
+     * @param Request $request
+     * @param type $table
+     * @return Response
+     */
     #[Route('/playlists/recherche/{champ}/{table}', name: 'playlists.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
@@ -81,6 +97,11 @@ class PlaylistsController extends AbstractController {
         ]);
     }  
 
+    /**
+     * affiche le détail d'une playlist
+     * @param type $id
+     * @return Response
+     */
     #[Route('/playlists/playlist/{id}', name: 'playlists.showone')]
     public function showOne($id): Response{
         $playlist = $this->playlistRepository->find($id);
